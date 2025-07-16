@@ -1,0 +1,107 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        accent: 'var(--accent)',
+        surface: 'var(--surface)',
+        border: 'var(--border)',
+        // Sophisticated neutral palette
+        warm: {
+          50: '#FAFAF8',
+          100: '#F5F5F3',
+          200: '#F0F0EE',
+          300: '#E8E8E6',
+          400: '#D4D4D2',
+          500: '#C0C0BE',
+          600: '#A8A8A6',
+          700: '#8B8B89',
+          800: '#6B6B69',
+          900: '#4A4A48',
+        },
+        charcoal: {
+          50: '#F7F7F7',
+          100: '#E1E1E1',
+          200: '#CFCFCF',
+          300: '#B1B1B1',
+          400: '#9E9E9E',
+          500: '#6E6E6E',
+          600: '#525252',
+          700: '#3D3D3D',
+          800: '#2D2D2D',
+          900: '#1A1A1A',
+        },
+        navy: {
+          50: '#F8FAFC',
+          100: '#F1F5F9',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#94A3B8',
+          500: '#64748B',
+          600: '#475569',
+          700: '#334155',
+          800: '#1E293B',
+          900: '#0F172A',
+        },
+        taupe: {
+          50: '#FDFCFA',
+          100: '#FAF8F5',
+          200: '#F5F2ED',
+          300: '#EDE8E0',
+          400: '#D4C9B8',
+          500: '#B8A890',
+          600: '#9C8B73',
+          700: '#8B7355',
+          800: '#7A6247',
+          900: '#6B5439',
+        },
+      },
+      fontFamily: {
+        'display': ['Inter', 'system-ui', 'sans-serif'],
+        'body': ['Inter', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'display-1': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'display-2': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'display-3': ['2rem', { lineHeight: '1.3', letterSpacing: '0em' }],
+        'body-large': ['1.125rem', { lineHeight: '1.6', letterSpacing: '0.025em' }],
+        'body': ['1rem', { lineHeight: '1.6', letterSpacing: '0.025em' }],
+        'caption': ['0.875rem', { lineHeight: '1.5', letterSpacing: '0.025em' }],
+      },
+      boxShadow: {
+        'sophisticated': 'var(--shadow-large)',
+        'sophisticated-xl': 'var(--shadow-xl)',
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out',
+        'slide-up': 'slideUp 0.4s ease-out',
+        'scale-in': 'scaleIn 0.3s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+      },
+    },
+  },
+  plugins: [],
+} 
