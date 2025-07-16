@@ -47,8 +47,8 @@ const CompoundInterestCalculator: React.FC = () => {
   const [finalAmountFontSize, setFinalAmountFontSize] = useState('4rem');
   const [breakdownFontSize, setBreakdownFontSize] = useState('1.875rem');
   const [showPdfModal, setShowPdfModal] = useState(false);
-  const [initialInvestmentDisplay, setInitialInvestmentDisplay] = useState('1,000');
-  const [monthlyContributionDisplay, setMonthlyContributionDisplay] = useState('100');
+  const [initialInvestmentDisplay, setInitialInvestmentDisplay] = useState('');
+  const [monthlyContributionDisplay, setMonthlyContributionDisplay] = useState('');
 
   const currencySymbols = useMemo(() => ({
     USD: '$',
@@ -72,8 +72,16 @@ const CompoundInterestCalculator: React.FC = () => {
   }, []);
 
   const parseNumberFromCommas = useCallback((value: string): number => {
-    return Number(value.replace(/,/g, '')) || 0;
+    // Remove commas and parse, but handle empty strings gracefully
+    const cleanValue = value.replace(/,/g, '').replace(/[^\d.]/g, '');
+    return cleanValue === '' ? 0 : Number(cleanValue) || 0;
   }, []);
+
+  // Initialize display values
+  useEffect(() => {
+    setInitialInvestmentDisplay(formatNumberWithCommas(initialInvestment));
+    setMonthlyContributionDisplay(formatNumberWithCommas(monthlyContribution));
+  }, [initialInvestment, monthlyContribution, currency]);
 
   const formatChartAxis = useCallback((value: number): string => {
     const symbol = currencySymbols[currency as keyof typeof currencySymbols] || '$';
@@ -304,7 +312,7 @@ const CompoundInterestCalculator: React.FC = () => {
     
     // Save the PDF
     doc.save('compound-interest-yearly-data.pdf');
-  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency]);
+  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency]);
 
   const downloadFullPagePDF = useCallback(async () => {
     if (!result) return;
@@ -510,7 +518,7 @@ const CompoundInterestCalculator: React.FC = () => {
         doc.addImage(imgData, 'PNG', 10, currentY, imgWidth, imgHeight);
         currentY += imgHeight + 20;
       }
-    } catch (error) {
+    } catch {
       console.log('Could not capture chart, continuing without it');
       currentY += 20;
     }
@@ -589,7 +597,7 @@ const CompoundInterestCalculator: React.FC = () => {
     
     // Save the PDF
     doc.save('compound-interest-full-report.pdf');
-  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, oneTimeTransactions, formatCurrency]);
+  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, oneTimeTransactions, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency]);
 
   const downloadPDF = useCallback(() => {
     setShowPdfModal(true);
@@ -744,7 +752,7 @@ const CompoundInterestCalculator: React.FC = () => {
     
     // Save the Excel file
     XLSX.writeFile(wb, 'compound-interest-report.xlsx');
-  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency]);
+  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency]);
 
   const updateOneTimeTransaction = useCallback((id: string, updates: Partial<OneTimeTransaction>) => {
     setOneTimeTransactions(prev => 
@@ -928,7 +936,7 @@ const CompoundInterestCalculator: React.FC = () => {
     }
   }, [calculateCompoundInterest]);
 
-  const Tooltip: React.FC<{ id: string; content: string; children: React.ReactNode }> = ({ id, content, children }) => (
+  const Tooltip: React.FC<{ id?: string; content: string; children: React.ReactNode }> = ({ content, children }) => (
     <div className="relative inline-block group">
       <div>
         {children}
@@ -1001,7 +1009,7 @@ const CompoundInterestCalculator: React.FC = () => {
 
                 {/* Initial Investment */}
                 <div className="mb-6">
-                  <Tooltip id="initial" content="The amount you're starting with">
+                  <Tooltip id="initial" content="The amount you&apos;re starting with">
                     <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
                       <DollarSign className="w-4 h-4 text-emerald-600" />
                       Initial Investment
@@ -1279,7 +1287,7 @@ const CompoundInterestCalculator: React.FC = () => {
                     
                     {oneTimeTransactions.length === 0 && (
                       <div className="text-center py-6 text-charcoal-500 text-sm">
-                        No one-time transactions planned. Click "Add Transaction" to get started.
+                        No one-time transactions planned. Click &quot;Add Transaction&quot; to get started.
                       </div>
                     )}
                   </div>
@@ -1477,7 +1485,7 @@ const CompoundInterestCalculator: React.FC = () => {
                           padding: '12px'
                         }}>
                           <p style={{ marginBottom: '8px', fontWeight: 'bold' }}>{`Year ${props.label}`}</p>
-                          {props.payload.map((entry: any, index: number) => (
+                          {props.payload.map((entry: { name: string; value: number; color: string }, index: number) => (
                             <p key={index} style={{ color: entry.color, margin: '4px 0' }}>
                               {entry.name === "One-Time Withdrawals" && entry.value > 0 
                                 ? `${entry.name}: -${formatCurrency(entry.value)}`
@@ -1622,7 +1630,7 @@ const CompoundInterestCalculator: React.FC = () => {
                   Download PDF Report
                 </h3>
                 <p className="text-charcoal-600">
-                  Choose what you'd like to download
+                  Choose what you&apos;d like to download
                 </p>
               </div>
               
