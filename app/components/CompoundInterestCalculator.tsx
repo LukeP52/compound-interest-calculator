@@ -904,37 +904,41 @@ const CompoundInterestCalculator: React.FC = () => {
     // Adjust font size based on the amount
     if (newResult) {
       const amount = newResult.finalAmount;
-      let fontSize = '4rem';
-      let breakdownSize = '3xl';
+      const symbol = currencySymbols[currency as keyof typeof currencySymbols] || '$';
+      const amountString = `${symbol}${amount.toLocaleString(undefined, { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+      })}`;
+      const charCount = amountString.length;
+      let fontSize = '3rem'; // Default large size
+      let breakdownSize = '1.25rem';
       
-      // More granular font size scaling for final amount and breakdown
-      if (amount >= 1000000000) { // 1B+
-        fontSize = '1.2rem';
+      // Only scale down when necessary based on character count
+      if (charCount >= 20) { // Very long numbers
+        fontSize = '1.5rem';
         breakdownSize = '1rem';
-      } else if (amount >= 100000000) { // 100M+
-        fontSize = '1.4rem';
-        breakdownSize = '1.125rem';
-      } else if (amount >= 10000000) { // 10M+
-        fontSize = '1.6rem';
-        breakdownSize = '1.25rem';
-      } else if (amount >= 1000000) { // 1M+
+      } else if (charCount >= 17) {
+        fontSize = '1.75rem';
+        breakdownSize = '1rem';
+      } else if (charCount >= 15) {
         fontSize = '2rem';
-        breakdownSize = '1.375rem';
-      } else if (amount >= 100000) { // 100K+
+        breakdownSize = '1.125rem';
+      } else if (charCount >= 13) {
+        fontSize = '2.25rem';
+        breakdownSize = '1.125rem';
+      } else if (charCount >= 11) {
         fontSize = '2.5rem';
-        breakdownSize = '1.5rem';
-      } else if (amount >= 10000) { // 10K+
-        fontSize = '3rem';
-        breakdownSize = '1.625rem';
-      } else {
-        fontSize = '3.5rem';
-        breakdownSize = '1.75rem';
+        breakdownSize = '1.25rem';
+      } else if (charCount >= 9) {
+        fontSize = '2.75rem';
+        breakdownSize = '1.25rem';
       }
+      // Keep default 3rem for anything shorter
       
       setFinalAmountFontSize(fontSize);
       setBreakdownFontSize(breakdownSize);
     }
-  }, [calculateCompoundInterest]);
+  }, [calculateCompoundInterest, currency, currencySymbols]);
 
   const Tooltip: React.FC<{ id?: string; content: string; children: React.ReactNode }> = ({ content, children }) => (
     <div className="relative inline-block group">
@@ -951,25 +955,25 @@ const CompoundInterestCalculator: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6 md:px-6 md:py-12">
+      <div className="container mx-auto px-4 py-4 md:px-6 md:py-8">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <div className="p-4 bg-white rounded-2xl shadow-lg border border-gray-100">
-              <Calculator className="w-10 h-10 text-emerald-600" />
+        <div className="text-center mb-6 md:mb-8">
+          <div className="flex items-center justify-center gap-3 sm:gap-6">
+            <div className="p-2.5 bg-emerald-600 rounded-xl shadow-lg">
+              <Calculator className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-charcoal-800 tracking-wide text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-charcoal-800 tracking-tight">
               Compound Interest Calculator
             </h1>
-            <div className="p-4 bg-white rounded-2xl shadow-lg border border-gray-100">
-              <TrendingUp className="w-10 h-10 text-emerald-600" />
+            <div className="p-2.5 bg-emerald-600 rounded-xl shadow-lg">
+              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
           </div>
         </div>
 
         {/* Main Calculator Card */}
-        <div className="max-w-7xl mx-auto bg-white rounded-2xl md:rounded-3xl shadow-lg p-6 md:p-12 lg:p-16 mb-8 md:mb-16 border border-gray-100">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 lg:p-12 mb-8 md:mb-12 border border-gray-100">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Input Section */}
             <div className="space-y-6 md:space-y-8">
               <div>
@@ -1327,31 +1331,31 @@ const CompoundInterestCalculator: React.FC = () => {
             </div>
 
             {/* Results Section */}
-            <div className="space-y-8 md:space-y-12">
+            <div className="space-y-6 md:space-y-8">
               <div>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-charcoal-800 mb-8 md:mb-12 flex items-center gap-3">
-                  <TrendingUp className="w-10 h-10 text-emerald-600" />
+                <h2 className="text-2xl md:text-3xl font-semibold text-charcoal-800 mb-6 md:mb-8 flex items-center gap-3">
+                  <TrendingUp className="w-8 h-8 text-emerald-600" />
                   Results
                 </h2>
 
                 {result ? (
                   <>
                     {/* Final Amount */}
-                    <div className="p-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-3xl border border-emerald-200 shadow-xl mb-8">
-                      <div className="flex items-center gap-6 mb-6">
-                        <div className="p-4 bg-white rounded-2xl shadow-lg">
-                          <TrendingUp className="w-8 h-8 text-emerald-600" />
+                    <div className="p-8 bg-emerald-700 rounded-2xl shadow-xl mb-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="p-2.5 bg-white/20 rounded-xl">
+                          <TrendingUp className="w-6 h-6 text-white" />
                         </div>
-                        <h3 className="text-2xl font-medium text-charcoal-700">
+                        <h3 className="text-xl font-medium text-white">
                           Final Amount
                         </h3>
                       </div>
-                      <div className="flex items-center justify-center min-h-32 p-4 overflow-hidden">
+                      <div className="flex items-center justify-center min-h-24 p-2 overflow-hidden">
                         <p 
-                          className="font-light text-charcoal-800 font-mono tracking-wide leading-none text-center whitespace-nowrap"
+                          className="font-bold text-white font-mono tracking-wide leading-none text-center whitespace-nowrap"
                           style={{
                             fontSize: finalAmountFontSize,
-                            lineHeight: '1.1'
+                            lineHeight: '1'
                           }}
                         >
                           {formatCurrency(result.finalAmount)}
@@ -1360,59 +1364,55 @@ const CompoundInterestCalculator: React.FC = () => {
                     </div>
 
                     {/* Breakdown */}
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 mb-6 md:mb-8">
-                      <div className="p-8 bg-white rounded-2xl border border-gray-100 shadow-lg min-w-0">
-                        <h4 className="text-sm font-medium text-charcoal-600 mb-3 uppercase tracking-wide">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 mb-6">
+                      <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 min-w-0">
+                        <h4 className="text-xs font-medium text-charcoal-600 mb-2 uppercase tracking-wider">
                           Total Contributions
                         </h4>
                         <p 
-                          className="font-bold text-charcoal-800 font-mono whitespace-nowrap overflow-hidden"
-                          style={{ fontSize: breakdownFontSize }}
+                          className="font-bold text-charcoal-800 font-mono whitespace-nowrap overflow-hidden text-xl"
                         >
                           {formatCurrency(result.totalContributions)}
                         </p>
                       </div>
 
-                      <div className="p-8 bg-white rounded-2xl border border-gray-100 shadow-lg min-w-0">
-                        <h4 className="text-sm font-medium text-charcoal-600 mb-3 uppercase tracking-wide">
+                      <div className="p-6 bg-emerald-50 rounded-xl border border-emerald-200 min-w-0">
+                        <h4 className="text-xs font-medium text-emerald-700 mb-2 uppercase tracking-wider">
                           Interest Earned
                         </h4>
                         <p 
-                          className="font-bold text-emerald-600 font-mono whitespace-nowrap overflow-hidden"
-                          style={{ fontSize: breakdownFontSize }}
+                          className="font-bold text-emerald-700 font-mono whitespace-nowrap overflow-hidden text-xl"
                         >
                           {formatCurrency(result.totalInterest)}
                         </p>
                       </div>
-
-
                     </div>
 
                     {/* Visual Breakdown */}
-                    <div className="p-8 bg-white rounded-2xl border border-gray-100 shadow-lg">
-                      <h4 className="text-xl font-medium text-charcoal-800 mb-8">
+                    <div className="p-6 bg-white rounded-xl border border-gray-200">
+                      <h4 className="text-lg font-medium text-charcoal-800 mb-4">
                         Investment Breakdown
                       </h4>
-                      <div className="relative h-12 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="relative h-8 bg-gray-100 rounded-full overflow-hidden">
                         <div 
                           className="absolute left-0 top-0 h-full bg-gray-600 transition-all duration-1000"
                           style={{ width: `${(result.totalContributions / result.finalAmount) * 100}%` }}
                         ></div>
                         <div 
-                          className="absolute top-0 h-full bg-emerald-500 transition-all duration-1000"
+                          className="absolute top-0 h-full bg-emerald-600 transition-all duration-1000"
                           style={{ 
                             left: `${(result.totalContributions / result.finalAmount) * 100}%`,
                             width: `${(result.totalInterest / result.finalAmount) * 100}%` 
                           }}
                         ></div>
                       </div>
-                      <div className="flex justify-between mt-6 text-base">
-                        <span className="flex items-center gap-3 text-charcoal-600">
-                          <div className="w-4 h-4 bg-gray-600 rounded"></div>
+                      <div className="flex justify-between mt-4 text-sm">
+                        <span className="flex items-center gap-2 text-charcoal-600">
+                          <div className="w-3 h-3 bg-gray-600 rounded"></div>
                           Principal ({((result.totalContributions / result.finalAmount) * 100).toFixed(1)}%)
                         </span>
-                        <span className="flex items-center gap-3 text-charcoal-600">
-                          <div className="w-4 h-4 bg-emerald-500 rounded"></div>
+                        <span className="flex items-center gap-2 text-charcoal-600">
+                          <div className="w-3 h-3 bg-emerald-600 rounded"></div>
                           Interest ({((result.totalInterest / result.finalAmount) * 100).toFixed(1)}%)
                         </span>
                       </div>
@@ -1439,8 +1439,8 @@ const CompoundInterestCalculator: React.FC = () => {
 
         {/* Chart Section */}
         {result && (
-          <div className="max-w-7xl mx-auto bg-white rounded-2xl md:rounded-3xl shadow-lg p-4 md:p-12 lg:p-16 mb-8 md:mb-16 border border-gray-100">
-            <div className="mb-6 md:mb-8">
+          <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 lg:p-12 mb-8 md:mb-12 border border-gray-100">
+            <div className="mb-6">
               <h2 className="text-2xl md:text-3xl font-semibold text-charcoal-800 flex items-center gap-3">
                 <TrendingUp className="w-8 h-8 text-emerald-600" />
                 Growth Over Time
@@ -1523,8 +1523,8 @@ const CompoundInterestCalculator: React.FC = () => {
 
         {/* Yearly Breakdown Table */}
         {result && (
-          <div className="max-w-7xl mx-auto bg-white rounded-2xl md:rounded-3xl shadow-lg p-4 md:p-12 lg:p-16 mb-8 md:mb-16 border border-gray-100">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
+          <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 lg:p-12 mb-8 md:mb-12 border border-gray-100">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <h2 className="text-2xl md:text-3xl font-semibold text-charcoal-800 flex items-center gap-3">
                 <Calculator className="w-8 h-8 text-emerald-600" />
                 Yearly Breakdown
