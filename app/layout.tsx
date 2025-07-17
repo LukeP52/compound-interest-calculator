@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: '/og-image.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Compound Interest Calculator - Green background with white calculator icon',
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Compound Interest Calculator - Calculate Investment Growth",
     description: "Free compound interest calculator to estimate your investment growth over time.",
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
   },
 };
 
