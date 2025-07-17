@@ -33,12 +33,8 @@ export const metadata: Metadata = {
   robots: "index, follow",
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico' },
-      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   openGraph: {
@@ -48,10 +44,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'Compound Interest Calculator',
+        alt: 'Compound Interest Calculator - Green background with white calculator icon',
       },
     ],
   },
@@ -59,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Compound Interest Calculator - Calculate Investment Growth",
     description: "Free compound interest calculator to estimate your investment growth over time.",
-    images: ['/og-image.png'],
+    images: ['/og-image.svg'],
   },
 };
 

@@ -1,0 +1,30 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#059669"/>
+  
+  <!-- Calculator Icon -->
+  <rect x="450" y="200" width="120" height="120" rx="12" fill="white"/>
+  <rect x="460" y="220" width="100" height="12" fill="#059669"/>
+  <rect x="460" y="240" width="20" height="20" fill="#059669"/>
+  <rect x="485" y="240" width="20" height="20" fill="#059669"/>
+  <rect x="510" y="240" width="20" height="20" fill="#059669"/>
+  <rect x="535" y="240" width="20" height="20" fill="#059669"/>
+  <rect x="460" y="265" width="20" height="20" fill="#059669"/>
+  <rect x="485" y="265" width="20" height="20" fill="#059669"/>
+  <rect x="510" y="265" width="20" height="20" fill="#059669"/>
+  <rect x="535" y="265" width="20" height="20" fill="#059669"/>
+  <rect x="460" y="290" width="20" height="20" fill="#059669"/>
+  <rect x="485" y="290" width="20" height="20" fill="#059669"/>
+  <rect x="510" y="290" width="20" height="20" fill="#059669"/>
+  <rect x="535" y="290" width="20" height="20" fill="#059669"/>
+  
+  <!-- Title -->
+  <text x="600" y="280" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white">
+    Compound Interest Calculator
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="330" font-family="Arial, sans-serif" font-size="28" fill="white" fill-opacity="0.9">
+    Plan your savings, investments, and retirement with accurate projections
+  </text>
+</svg>
