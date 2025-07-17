@@ -31,6 +31,7 @@ export const metadata: Metadata = {
   creator: "Compound Interest Calculator",
   publisher: "Compound Interest Calculator",
   robots: "index, follow",
+  metadataBase: new URL('https://compound-interest-calculator-18fn.vercel.app'),
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -40,6 +41,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Compound Interest Calculator - Calculate Investment Growth",
     description: "Free compound interest calculator to estimate your investment growth over time. Calculate returns on savings, investments, and retirement planning.",
+    url: "https://compound-interest-calculator-18fn.vercel.app",
+    siteName: "Compound Interest Calculator",
     type: "website",
     locale: "en_US",
     images: [
