@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://compound-interest-calculator-18fn.vercel.app/sitemap.xml
+# Alternative sitemap for custom domain (if you have one)
+# Sitemap: https://your-custom-domain.com/sitemap.xml 
