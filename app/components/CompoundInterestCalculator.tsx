@@ -975,238 +975,244 @@ const CompoundInterestCalculator: React.FC = () => {
         <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 lg:p-12 mb-8 md:mb-12 border border-gray-100">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Input Section */}
-            <div className="space-y-6 md:space-y-8">
+            <div className="space-y-6">
               <div>
-                <h2 className="text-2xl md:text-3xl font-semibold text-charcoal-800 mb-6 md:mb-8 flex items-center gap-3">
+                <h2 className="text-2xl md:text-3xl font-semibold text-charcoal-800 mb-8 flex items-center gap-3">
                   <Calculator className="w-8 h-8 text-emerald-600" />
                   Investment Parameters
                 </h2>
 
-                {/* Currency Selector */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                    Currency
-                  </label>
-                  <select
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm"
-                  >
-                    {Object.keys(currencySymbols).map(curr => (
-                      <option key={curr} value={curr}>{curr}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Start Date */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm"
-                  />
-                </div>
-
-                {/* Initial Investment */}
-                <div className="mb-6">
-                  <Tooltip id="initial" content="The amount you&apos;re starting with">
-                    <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      <DollarSign className="w-4 h-4 text-emerald-600" />
-                      Initial Investment
-                      <Info className="w-4 h-4 text-charcoal-400" />
+                {/* Currency Selector and Start Date */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <label className="flex items-center text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide h-[1.5rem]">
+                      Currency
                     </label>
-                  </Tooltip>
-                  <input
-                    type="text"
-                    value={initialInvestmentDisplay}
-                    onChange={(e) => {
-                      const numericValue = parseNumberFromCommas(e.target.value);
-                      setInitialInvestment(numericValue);
-                      setInitialInvestmentDisplay(formatNumberWithCommas(numericValue));
-                    }}
-                    onBlur={(e) => {
-                      const numericValue = parseNumberFromCommas(e.target.value);
-                      setInitialInvestmentDisplay(formatNumberWithCommas(numericValue));
-                    }}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg"
-                  />
-                </div>
+                    <select
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm text-lg h-[3.5rem]"
+                    >
+                      {Object.keys(currencySymbols).map(curr => (
+                        <option key={curr} value={curr}>{curr}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                {/* Contribution Amount with Frequency */}
-                <div className="mb-6">
-                  <Tooltip id="contribution" content="Amount you plan to invest at each interval">
-                    <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      <span className="flex items-center gap-2">
-                        Contribution Amount
-                        <select
-                          value={contributionFrequency}
-                          onChange={(e) => setContributionFrequency(e.target.value)}
-                          className="ml-2 px-2 py-1 text-xs border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm appearance-none cursor-pointer"
-                          style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center', backgroundSize: '12px auto', paddingRight: '20px' }}
-                        >
-                          <option value="daily">Daily</option>
-                          <option value="weekly">Weekly</option>
-                          <option value="biweekly">Bi-weekly</option>
-                          <option value="monthly">Monthly</option>
-                          <option value="quarterly">Quarterly</option>
-                          <option value="semiannual">Semi-annual</option>
-                          <option value="annual">Annual</option>
-                        </select>
-                      </span>
-                      <Info className="w-4 h-4 text-charcoal-400" />
+                  <div>
+                    <label className="flex items-center text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide h-[1.5rem]">
+                      Start Date
                     </label>
-                  </Tooltip>
-                  <input
-                    type="text"
-                    value={monthlyContributionDisplay}
-                    onChange={(e) => {
-                      const numericValue = parseNumberFromCommas(e.target.value);
-                      setMonthlyContribution(numericValue);
-                      setMonthlyContributionDisplay(formatNumberWithCommas(numericValue));
-                    }}
-                    onBlur={(e) => {
-                      const numericValue = parseNumberFromCommas(e.target.value);
-                      setMonthlyContributionDisplay(formatNumberWithCommas(numericValue));
-                    }}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg"
-                  />
-                </div>
-
-                {/* Annual Interest Rate */}
-                <div className="mb-6">
-                  <Tooltip id="rate" content="Expected annual return on your investment">
-                    <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      Annual Interest Rate ({annualRate}%)
-                      <Info className="w-4 h-4 text-charcoal-400" />
-                    </label>
-                  </Tooltip>
-                  <div className="flex gap-4 items-center">
                     <input
-                      type="range"
-                      min="0"
-                      max="20"
-                      step="0.1"
-                      value={annualRate}
-                      onChange={(e) => setAnnualRate(Number(e.target.value))}
-                      className="flex-1 accent-emerald-500"
-                    />
-                    <input
-                      type="number"
-                      value={annualRate || ''}
-                      onChange={(e) => setAnnualRate(Number(e.target.value) || 0)}
-                      className="w-24 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
-                      min="0"
-                      max="50"
-                      step="0.1"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm text-lg h-[3.5rem]"
                     />
                   </div>
                 </div>
 
-                {/* Number of Years */}
-                <div className="mb-6">
-                  <Tooltip id="years" content="How long you plan to invest">
-                    <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      Investment Period ({years} years)
-                      <Info className="w-4 h-4 text-charcoal-400" />
-                    </label>
-                  </Tooltip>
-                  <div className="flex gap-4 items-center">
+                {/* Initial Investment and Contribution Amount */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <Tooltip id="initial" content="The amount you&apos;re starting with">
+                      <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide h-[2.25rem]">
+                        <DollarSign className="w-4 h-4 text-emerald-600" />
+                        Initial Investment
+                        <Info className="w-4 h-4 text-charcoal-400" />
+                      </label>
+                    </Tooltip>
                     <input
-                      type="range"
-                      min="1"
-                      max="50"
-                      value={years}
-                      onChange={(e) => setYears(Number(e.target.value))}
-                      className="flex-1 accent-emerald-500"
+                      type="text"
+                      value={initialInvestmentDisplay}
+                      onChange={(e) => {
+                        const numericValue = parseNumberFromCommas(e.target.value);
+                        setInitialInvestment(numericValue);
+                        setInitialInvestmentDisplay(formatNumberWithCommas(numericValue));
+                      }}
+                      onBlur={(e) => {
+                        const numericValue = parseNumberFromCommas(e.target.value);
+                        setInitialInvestmentDisplay(formatNumberWithCommas(numericValue));
+                      }}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg"
                     />
+                  </div>
+
+                  <div>
+                    <div className="h-[2.25rem] flex items-center mb-3">
+                      <Tooltip id="contribution" content="Amount you plan to invest at each interval">
+                        <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 uppercase tracking-wide">
+                          <span className="flex items-center gap-2">
+                            Contribution
+                            <select
+                              value={contributionFrequency}
+                              onChange={(e) => setContributionFrequency(e.target.value)}
+                              className="ml-2 px-2 py-1 text-xs border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm appearance-none cursor-pointer"
+                              style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center', backgroundSize: '12px auto', paddingRight: '20px' }}
+                            >
+                              <option value="daily">Daily</option>
+                              <option value="weekly">Weekly</option>
+                              <option value="biweekly">Bi-weekly</option>
+                              <option value="monthly">Monthly</option>
+                              <option value="quarterly">Quarterly</option>
+                              <option value="semiannual">Semi-annual</option>
+                              <option value="annual">Annual</option>
+                            </select>
+                          </span>
+                          <Info className="w-4 h-4 text-charcoal-400" />
+                        </label>
+                      </Tooltip>
+                    </div>
                     <input
-                      type="number"
-                      value={years || ''}
-                      onChange={(e) => setYears(Number(e.target.value) || 1)}
-                      className="w-24 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
-                      min="1"
-                      max="100"
+                      type="text"
+                      value={monthlyContributionDisplay}
+                      onChange={(e) => {
+                        const numericValue = parseNumberFromCommas(e.target.value);
+                        setMonthlyContribution(numericValue);
+                        setMonthlyContributionDisplay(formatNumberWithCommas(numericValue));
+                      }}
+                      onBlur={(e) => {
+                        const numericValue = parseNumberFromCommas(e.target.value);
+                        setMonthlyContributionDisplay(formatNumberWithCommas(numericValue));
+                      }}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg"
                     />
                   </div>
                 </div>
 
-                {/* Compound Frequency */}
-                <div className="mb-6">
-                  <Tooltip id="compound" content="How often interest is compounded">
-                    <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      Compound Frequency
-                      <Info className="w-4 h-4 text-charcoal-400" />
-                    </label>
-                  </Tooltip>
-                  <select
-                    value={compoundFrequency}
-                    onChange={e => setCompoundFrequency(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm"
-                  >
-                    <option value={365}>Daily (365/yr)</option>
-                    <option value={360}>Daily (360/yr)</option>
-                    <option value={104}>Semi-Weekly (104/yr)</option>
-                    <option value={52}>Weekly (52/yr)</option>
-                    <option value={26}>Bi-Weekly (26/yr)</option>
-                    <option value={24}>Semi-Monthly (24/yr)</option>
-                    <option value={12}>Monthly (12/yr)</option>
-                    <option value={6}>Bi-Monthly (6/yr)</option>
-                    <option value={4}>Quarterly (4/yr)</option>
-                    <option value={2}>Half-Yearly (2/yr)</option>
-                    <option value={1}>Yearly (1/yr)</option>
-                    <option value="custom">Custom</option>
-                  </select>
-                </div>
-
-                {/* Inline custom input (show only if compoundFrequency === 'custom') */}
-                {compoundFrequency === 'custom' && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <label htmlFor="custom-compound" className="text-sm text-charcoal-700">Compounds per Year:</label>
-                    <input
-                      id="custom-compound"
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value={customCompoundFrequency}
-                      onChange={e => setCustomCompoundFrequency(Number(e.target.value) || 1)}
-                      className="w-24 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
-                    />
-                  </div>
-                )}
-
-                {/* Deposit Timing */}
-                <div className="mb-6">
-                  <Tooltip id="deposits-timing" content="When deposits are made relative to interest calculation">
-                    <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      Deposit Timing
-                      <Info className="w-4 h-4 text-charcoal-400" />
-                    </label>
-                  </Tooltip>
-                  <div className="flex gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
+                {/* Annual Interest Rate and Investment Period */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <Tooltip id="rate" content="Expected annual return on your investment">
+                      <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
+                        Annual Rate ({annualRate}%)
+                        <Info className="w-4 h-4 text-charcoal-400" />
+                      </label>
+                    </Tooltip>
+                    <div className="flex gap-4 items-center">
                       <input
-                        type="radio"
-                        name="depositsAtEnd"
-                        checked={!depositsAtEnd}
-                        onChange={() => setDepositsAtEnd(false)}
-                        className="w-4 h-4 text-emerald-500 accent-emerald-500"
+                        type="range"
+                        min="0"
+                        max="20"
+                        step="0.1"
+                        value={annualRate}
+                        onChange={(e) => setAnnualRate(Number(e.target.value))}
+                        className="flex-1 accent-emerald-500"
                       />
-                      <span className="text-sm text-charcoal-700">Beginning of period</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
                       <input
-                        type="radio"
-                        name="depositsAtEnd"
-                        checked={depositsAtEnd}
-                        onChange={() => setDepositsAtEnd(true)}
-                        className="w-4 h-4 text-emerald-500 accent-emerald-500"
+                        type="number"
+                        value={annualRate || ''}
+                        onChange={(e) => setAnnualRate(Number(e.target.value) || 0)}
+                        className="w-20 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
+                        min="0"
+                        max="50"
+                        step="0.1"
                       />
-                      <span className="text-sm text-charcoal-700">End of period</span>
-                    </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Tooltip id="years" content="How long you plan to invest">
+                      <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
+                        Period ({years} years)
+                        <Info className="w-4 h-4 text-charcoal-400" />
+                      </label>
+                    </Tooltip>
+                    <div className="flex gap-4 items-center">
+                      <input
+                        type="range"
+                        min="1"
+                        max="50"
+                        value={years}
+                        onChange={(e) => setYears(Number(e.target.value))}
+                        className="flex-1 accent-emerald-500"
+                      />
+                      <input
+                        type="number"
+                        value={years || ''}
+                        onChange={(e) => setYears(Number(e.target.value) || 1)}
+                        className="w-20 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
+                        min="1"
+                        max="100"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Compound Frequency and Deposit Timing */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <Tooltip id="compound" content="How often interest is compounded">
+                      <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
+                        Compound Frequency
+                        <Info className="w-4 h-4 text-charcoal-400" />
+                      </label>
+                    </Tooltip>
+                    <select
+                      value={compoundFrequency}
+                      onChange={e => setCompoundFrequency(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm"
+                    >
+                      <option value={365}>Daily (365/yr)</option>
+                      <option value={360}>Daily (360/yr)</option>
+                      <option value={104}>Semi-Weekly (104/yr)</option>
+                      <option value={52}>Weekly (52/yr)</option>
+                      <option value={26}>Bi-Weekly (26/yr)</option>
+                      <option value={24}>Semi-Monthly (24/yr)</option>
+                      <option value={12}>Monthly (12/yr)</option>
+                      <option value={6}>Bi-Monthly (6/yr)</option>
+                      <option value={4}>Quarterly (4/yr)</option>
+                      <option value={2}>Half-Yearly (2/yr)</option>
+                      <option value={1}>Yearly (1/yr)</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                    
+                    {/* Inline custom input (show only if compoundFrequency === 'custom') */}
+                    {compoundFrequency === 'custom' && (
+                      <div className="mt-3 flex items-center gap-2">
+                        <label htmlFor="custom-compound" className="text-xs text-charcoal-700">Compounds per Year:</label>
+                        <input
+                          id="custom-compound"
+                          type="number"
+                          min="0.01"
+                          step="0.01"
+                          value={customCompoundFrequency}
+                          onChange={e => setCustomCompoundFrequency(Number(e.target.value) || 1)}
+                          className="w-20 px-2 py-1 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-sm"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Tooltip id="deposits-timing" content="When deposits are made relative to interest calculation">
+                      <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
+                        Deposit Timing
+                        <Info className="w-4 h-4 text-charcoal-400" />
+                      </label>
+                    </Tooltip>
+                    <div className="space-y-3 pt-2">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="depositsAtEnd"
+                          checked={!depositsAtEnd}
+                          onChange={() => setDepositsAtEnd(false)}
+                          className="w-4 h-4 text-emerald-500 accent-emerald-500"
+                        />
+                        <span className="text-sm text-charcoal-700">Beginning of period</span>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="depositsAtEnd"
+                          checked={depositsAtEnd}
+                          onChange={() => setDepositsAtEnd(true)}
+                          className="w-4 h-4 text-emerald-500 accent-emerald-500"
+                        />
+                        <span className="text-sm text-charcoal-700">End of period</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
@@ -1301,7 +1307,7 @@ const CompoundInterestCalculator: React.FC = () => {
                 <div className="mb-6">
                   <Tooltip id="annual-increase" content="Percentage increase in contributions each year (e.g., 5% for salary raises)">
                     <label className="flex items-center gap-3 text-sm font-medium text-charcoal-700 mb-3 uppercase tracking-wide">
-                      Annual Contribution Increase ({annualIncrease}%)
+                      Annual Increase ({annualIncrease}%)
                       <Info className="w-4 h-4 text-charcoal-400" />
                     </label>
                   </Tooltip>
@@ -1319,7 +1325,7 @@ const CompoundInterestCalculator: React.FC = () => {
                       type="number"
                       value={annualIncrease || ''}
                       onChange={(e) => setAnnualIncrease(Number(e.target.value) || 0)}
-                      className="w-24 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
+                      className="w-20 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
                       min="0"
                       max="50"
                       step="0.5"
