@@ -33,7 +33,7 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold text-charcoal-800 mb-3">How It Works</h3>
               <p className="text-charcoal-700 leading-relaxed">
-                When you invest money, you earn interest not just on your original investment, but also on any interest you've already earned. 
+                When you invest money, you earn interest not just on your original investment, but also on any interest you&apos;ve already earned. 
                 This creates a snowball effect where your money grows faster over time.
               </p>
             </div>
@@ -54,7 +54,7 @@ export default function Home() {
               <li>Make regular contributions, even small amounts</li>
               <li>Reinvest all dividends and interest</li>
               <li>Choose investments with consistent returns</li>
-              <li>Don't withdraw money unnecessarily</li>
+              <li>Don&apos;t withdraw money unnecessarily</li>
             </ul>
           </div>
 
@@ -95,7 +95,7 @@ export default function Home() {
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-charcoal-800">What's a realistic annual return rate?</h4>
+                <h4 className="font-semibold text-charcoal-800">What&apos;s a realistic annual return rate?</h4>
                 <p className="text-charcoal-700 text-sm">
                   Historical stock market returns average around 7-10% annually, but this varies significantly by asset class 
                   and time period. Conservative estimates are often 5-7% for diversified portfolios.
