@@ -24,7 +24,7 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-blue-800 mb-3">What is Compound Interest?</h3>
             <p className="text-blue-700 leading-relaxed">
               Compound interest is the interest calculated on the initial principal and the accumulated interest from previous periods. 
-              It's often called "interest on interest" and can significantly boost your investment returns over time. 
+              It&apos;s often called &quot;interest on interest&quot; and can significantly boost your investment returns over time. 
               The longer you invest, the more powerful compound interest becomes.
             </p>
           </div>

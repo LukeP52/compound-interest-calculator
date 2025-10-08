@@ -45,7 +45,6 @@ const CompoundInterestCalculator: React.FC = () => {
   const [oneTimeTransactions, setOneTimeTransactions] = useState<OneTimeTransaction[]>([]);
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [finalAmountFontSize, setFinalAmountFontSize] = useState('4rem');
-  const [breakdownFontSize, setBreakdownFontSize] = useState('1.875rem');
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [initialInvestmentDisplay, setInitialInvestmentDisplay] = useState('');
   const [monthlyContributionDisplay, setMonthlyContributionDisplay] = useState('');
@@ -81,7 +80,7 @@ const CompoundInterestCalculator: React.FC = () => {
   useEffect(() => {
     setInitialInvestmentDisplay(formatNumberWithCommas(initialInvestment));
     setMonthlyContributionDisplay(formatNumberWithCommas(monthlyContribution));
-  }, [initialInvestment, monthlyContribution, currency]);
+  }, [initialInvestment, monthlyContribution, currency, formatNumberWithCommas]);
 
   const formatChartAxis = useCallback((value: number): string => {
     const symbol = currencySymbols[currency as keyof typeof currencySymbols] || '$';
@@ -901,43 +900,35 @@ const CompoundInterestCalculator: React.FC = () => {
     const newResult = calculateCompoundInterest();
     setResult(newResult);
     
-    // Adjust font size based on the amount
-    if (newResult) {
-      const amount = newResult.finalAmount;
-      const symbol = currencySymbols[currency as keyof typeof currencySymbols] || '$';
-      const amountString = `${symbol}${amount.toLocaleString(undefined, { 
-        minimumFractionDigits: 2, 
-        maximumFractionDigits: 2 
-      })}`;
-      const charCount = amountString.length;
-      let fontSize = '3rem'; // Default large size
-      let breakdownSize = '1.25rem';
-      
-      // Only scale down when necessary based on character count
-      if (charCount >= 20) { // Very long numbers
-        fontSize = '1.5rem';
-        breakdownSize = '1rem';
-      } else if (charCount >= 17) {
-        fontSize = '1.75rem';
-        breakdownSize = '1rem';
-      } else if (charCount >= 15) {
-        fontSize = '2rem';
-        breakdownSize = '1.125rem';
-      } else if (charCount >= 13) {
-        fontSize = '2.25rem';
-        breakdownSize = '1.125rem';
-      } else if (charCount >= 11) {
-        fontSize = '2.5rem';
-        breakdownSize = '1.25rem';
-      } else if (charCount >= 9) {
-        fontSize = '2.75rem';
-        breakdownSize = '1.25rem';
+      // Adjust font size based on the amount
+      if (newResult) {
+        const amount = newResult.finalAmount;
+        const symbol = currencySymbols[currency as keyof typeof currencySymbols] || '$';
+        const amountString = `${symbol}${amount.toLocaleString(undefined, { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+        })}`;
+        const charCount = amountString.length;
+        let fontSize = '3rem'; // Default large size
+        
+        // Only scale down when necessary based on character count
+        if (charCount >= 20) { // Very long numbers
+          fontSize = '1.5rem';
+        } else if (charCount >= 17) {
+          fontSize = '1.75rem';
+        } else if (charCount >= 15) {
+          fontSize = '2rem';
+        } else if (charCount >= 13) {
+          fontSize = '2.25rem';
+        } else if (charCount >= 11) {
+          fontSize = '2.5rem';
+        } else if (charCount >= 9) {
+          fontSize = '2.75rem';
+        }
+        // Keep default 3rem for anything shorter
+        
+        setFinalAmountFontSize(fontSize);
       }
-      // Keep default 3rem for anything shorter
-      
-      setFinalAmountFontSize(fontSize);
-      setBreakdownFontSize(breakdownSize);
-    }
   }, [calculateCompoundInterest, currency, currencySymbols]);
 
   const Tooltip: React.FC<{ id?: string; content: string; children: React.ReactNode }> = ({ content, children }) => (
