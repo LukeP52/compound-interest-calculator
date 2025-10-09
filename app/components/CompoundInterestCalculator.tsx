@@ -861,30 +861,10 @@ const CompoundInterestCalculator: React.FC = () => {
         yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyContributionAmount);
       }
       
-      // Apply compound interest if it's a compounding period
-      const shouldCompound = (() => {
-        // Determine if this month is a compounding period
-        if (n >= 12) {
-          // Monthly or more frequent compounding
-          const compoundingsPerMonth = n / monthsPerYear;
-          const monthlyRate = r / n;
-          // Apply multiple compoundings within the month
-          for (let i = 0; i < compoundingsPerMonth; i++) {
-            currentBalance = roundToCents(currentBalance * (1 + monthlyRate));
-          }
-          return true;
-        } else {
-          // Less frequent than monthly
-          const monthsPerCompound = monthsPerYear / n;
-          return month % monthsPerCompound === 0;
-        }
-      })();
-      
-      if (shouldCompound && n < 12) {
-        // For less frequent compounding (quarterly, semi-annual, annual)
-        const periodRate = r / n;
-        currentBalance = roundToCents(currentBalance * (1 + periodRate));
-      }
+      // Apply compound interest based on frequency
+      // Calculate effective monthly growth rate that matches the compound frequency
+      const effectiveMonthlyRate = Math.pow(1 + r/n, n/12) - 1;
+      currentBalance = roundToCents(currentBalance * (1 + effectiveMonthlyRate));
       
       // Add contribution at end if specified
       if (depositsAtEnd && monthlyContributionAmount > 0) {
