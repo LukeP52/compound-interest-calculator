@@ -981,6 +981,51 @@ const CompoundInterestCalculator: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+      <style jsx global>{`
+        /* Ensure proper touch behavior on mobile */
+        * {
+          -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Improve input field appearance on iOS */
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+        }
+        
+        /* Better range slider touch targets */
+        input[type="range"] {
+          -webkit-appearance: none;
+          height: 32px;
+          background: transparent;
+          cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          height: 24px;
+          width: 24px;
+          border-radius: 50%;
+          background: #10b981;
+          cursor: pointer;
+          border: 2px solid #fff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+          height: 24px;
+          width: 24px;
+          border-radius: 50%;
+          background: #10b981;
+          cursor: pointer;
+          border: 2px solid #fff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+      `}</style>
       {/* Main Content */}
       <div className="container mx-auto px-4 py-4 md:px-6 md:py-8">
         {/* Header */}
@@ -1051,6 +1096,9 @@ const CompoundInterestCalculator: React.FC = () => {
                     </Tooltip>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9,]*"
+                      placeholder="1,000"
                       value={initialInvestmentDisplay}
                       onChange={(e) => {
                         const numericValue = parseNumberFromCommas(e.target.value);
@@ -1061,7 +1109,7 @@ const CompoundInterestCalculator: React.FC = () => {
                         const numericValue = parseNumberFromCommas(e.target.value);
                         setInitialInvestmentDisplay(formatNumberWithCommas(numericValue));
                       }}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg"
+                      className="w-full px-4 py-4 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg touch-manipulation"
                     />
                   </div>
 
@@ -1092,6 +1140,9 @@ const CompoundInterestCalculator: React.FC = () => {
                     </div>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9,]*"
+                      placeholder="100"
                       value={monthlyContributionDisplay}
                       onChange={(e) => {
                         const numericValue = parseNumberFromCommas(e.target.value);
@@ -1102,7 +1153,7 @@ const CompoundInterestCalculator: React.FC = () => {
                         const numericValue = parseNumberFromCommas(e.target.value);
                         setMonthlyContributionDisplay(formatNumberWithCommas(numericValue));
                       }}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg"
+                      className="w-full px-4 py-4 border border-gray-200 rounded-xl bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-lg touch-manipulation"
                     />
                   </div>
                 </div>
@@ -1124,13 +1175,14 @@ const CompoundInterestCalculator: React.FC = () => {
                         step="0.1"
                         value={annualRate}
                         onChange={(e) => setAnnualRate(Number(e.target.value))}
-                        className="flex-1 accent-emerald-500"
+                        className="flex-1 h-8 accent-emerald-500 touch-manipulation"
                       />
                       <input
                         type="number"
+                        inputMode="decimal"
                         value={annualRate || ''}
                         onChange={(e) => setAnnualRate(Number(e.target.value) || 0)}
-                        className="w-20 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
+                        className="w-20 px-3 py-3 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-center touch-manipulation"
                         min="0"
                         max="50"
                         step="0.1"
@@ -1152,13 +1204,14 @@ const CompoundInterestCalculator: React.FC = () => {
                         max="50"
                         value={years}
                         onChange={(e) => setYears(Number(e.target.value))}
-                        className="flex-1 accent-emerald-500"
+                        className="flex-1 h-8 accent-emerald-500 touch-manipulation"
                       />
                       <input
                         type="number"
+                        inputMode="numeric"
                         value={years || ''}
                         onChange={(e) => setYears(Number(e.target.value) || 1)}
-                        className="w-20 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
+                        className="w-20 px-3 py-3 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-center touch-manipulation"
                         min="1"
                         max="100"
                       />
@@ -1196,16 +1249,18 @@ const CompoundInterestCalculator: React.FC = () => {
                     
                     {/* Inline custom input (show only if compoundFrequency === 'custom') */}
                     {compoundFrequency === 'custom' && (
-                      <div className="mt-3 flex items-center gap-2">
-                        <label htmlFor="custom-compound" className="text-xs text-charcoal-700">Compounds per Year:</label>
+                      <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2">
+                        <label htmlFor="custom-compound" className="text-sm font-medium text-charcoal-700">Compounds per Year:</label>
                         <input
                           id="custom-compound"
                           type="number"
+                          inputMode="decimal"
                           min="0.01"
                           step="0.01"
+                          placeholder="12.01"
                           value={customCompoundFrequency}
                           onChange={e => setCustomCompoundFrequency(Number(e.target.value) || 1)}
-                          className="w-20 px-2 py-1 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-sm"
+                          className="w-full sm:w-32 px-3 py-3 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-center touch-manipulation"
                         />
                       </div>
                     )}
@@ -1254,7 +1309,7 @@ const CompoundInterestCalculator: React.FC = () => {
                     </Tooltip>
                     <button
                       onClick={addOneTimeTransaction}
-                      className="flex items-center gap-2 px-3 py-2 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors duration-200"
+                      className="flex items-center gap-2 px-4 py-3 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors duration-200 touch-manipulation min-h-[44px]"
                     >
                       <Plus className="w-4 h-4" />
                       Add Transaction
@@ -1264,13 +1319,13 @@ const CompoundInterestCalculator: React.FC = () => {
                   <div className="space-y-3 max-h-48 overflow-y-auto">
                     {oneTimeTransactions.map((transaction) => (
                       <div key={transaction.id} className="p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                           <div>
-                            <label className="block text-xs font-medium text-charcoal-700 mb-1">Type</label>
+                            <label className="block text-xs font-medium text-charcoal-700 mb-2">Type</label>
                             <select
                               value={transaction.type}
                               onChange={(e) => updateOneTimeTransaction(transaction.id, { type: e.target.value as 'deposit' | 'withdrawal' })}
-                              className="w-full px-2 py-1 text-sm border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                              className="w-full px-3 py-3 text-sm border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 touch-manipulation"
                             >
                               <option value="deposit">Deposit</option>
                               <option value="withdrawal">Withdrawal</option>
@@ -1278,9 +1333,12 @@ const CompoundInterestCalculator: React.FC = () => {
                           </div>
                           
                           <div>
-                            <label className="block text-xs font-medium text-charcoal-700 mb-1">Amount</label>
+                            <label className="block text-xs font-medium text-charcoal-700 mb-2">Amount</label>
                             <input
                               type="text"
+                              inputMode="numeric"
+                              pattern="[0-9,]*"
+                              placeholder="1,000"
                               value={transaction.amountDisplay || formatNumberWithCommas(transaction.amount)}
                               onChange={(e) => {
                                 const numericValue = parseNumberFromCommas(e.target.value);
@@ -1295,27 +1353,27 @@ const CompoundInterestCalculator: React.FC = () => {
                                   amountDisplay: formatNumberWithCommas(numericValue)
                                 });
                               }}
-                              className="w-full px-2 py-1 text-sm border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                              placeholder="0"
+                              className="w-full px-3 py-3 text-sm border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-mono touch-manipulation"
                             />
                           </div>
                           
                           <div>
-                            <label className="block text-xs font-medium text-charcoal-700 mb-1">Date</label>
+                            <label className="block text-xs font-medium text-charcoal-700 mb-2">Date</label>
                             <input
                               type="date"
                               value={transaction.date}
                               onChange={(e) => updateOneTimeTransaction(transaction.id, { date: e.target.value })}
-                              className="w-full px-2 py-1 text-sm border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                              className="w-full px-3 py-3 text-sm border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 touch-manipulation"
                             />
                           </div>
                           
                           <div className="flex justify-end">
                             <button
                               onClick={() => removeOneTimeTransaction(transaction.id)}
-                              className="p-1 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                              className="p-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+                              aria-label="Remove transaction"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
@@ -1346,13 +1404,14 @@ const CompoundInterestCalculator: React.FC = () => {
                       step="0.5"
                       value={annualIncrease}
                       onChange={(e) => setAnnualIncrease(Number(e.target.value))}
-                      className="flex-1 accent-emerald-500"
+                      className="flex-1 h-8 accent-emerald-500 touch-manipulation"
                     />
                     <input
                       type="number"
+                      inputMode="decimal"
                       value={annualIncrease || ''}
                       onChange={(e) => setAnnualIncrease(Number(e.target.value) || 0)}
-                      className="w-20 px-3 py-2 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono"
+                      className="w-20 px-3 py-3 border border-gray-200 rounded-lg bg-white text-charcoal-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 shadow-sm font-mono text-center touch-manipulation"
                       min="0"
                       max="50"
                       step="0.5"
@@ -1565,16 +1624,16 @@ const CompoundInterestCalculator: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={downloadExcel}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg touch-manipulation min-h-[44px]"
                 >
-                  <FileSpreadsheet className="w-4 h-4" />
+                  <FileSpreadsheet className="w-5 h-5" />
                   Download Excel
                 </button>
                 <button
                   onClick={downloadPDF}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg touch-manipulation min-h-[44px]"
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="w-5 h-5" />
                   Download PDF
                 </button>
               </div>
@@ -1667,11 +1726,13 @@ const CompoundInterestCalculator: React.FC = () => {
                     downloadYearlyDataPDF();
                     setShowPdfModal(false);
                   }}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl touch-manipulation min-h-[52px]"
                 >
                   <FileText className="w-5 h-5" />
-                  Yearly Data Report
-                  <span className="text-sm opacity-90">(Summary + Table)</span>
+                  <div className="flex flex-col items-center sm:flex-row sm:gap-2">
+                    <span>Yearly Data Report</span>
+                    <span className="text-sm opacity-90">(Summary + Table)</span>
+                  </div>
                 </button>
                 
                 <button
@@ -1679,16 +1740,18 @@ const CompoundInterestCalculator: React.FC = () => {
                     await downloadFullPagePDF();
                     setShowPdfModal(false);
                   }}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-charcoal-800 hover:bg-charcoal-900 text-white rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-charcoal-800 hover:bg-charcoal-900 text-white rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl touch-manipulation min-h-[52px]"
                 >
                   <FileText className="w-5 h-5" />
-                  Complete Report
-                  <span className="text-sm opacity-90">(Full Page Content + Chart)</span>
+                  <div className="flex flex-col items-center sm:flex-row sm:gap-2">
+                    <span>Complete Report</span>
+                    <span className="text-sm opacity-90">(Full Page Content + Chart)</span>
+                  </div>
                 </button>
                 
                 <button
                   onClick={() => setShowPdfModal(false)}
-                  className="w-full px-6 py-3 text-charcoal-600 hover:text-charcoal-800 border border-gray-300 hover:border-gray-400 rounded-xl transition-colors duration-200"
+                  className="w-full px-6 py-4 text-charcoal-600 hover:text-charcoal-800 border border-gray-300 hover:border-gray-400 rounded-xl transition-colors duration-200 touch-manipulation min-h-[52px]"
                 >
                   Cancel
                 </button>
