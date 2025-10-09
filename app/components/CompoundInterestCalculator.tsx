@@ -106,6 +106,20 @@ const CompoundInterestCalculator: React.FC = () => {
     setOneTimeTransactions(prev => [...prev, newTransaction]);
   }, []);
 
+  // Helper function to get periods per year for different contribution frequencies
+  const getPeriodsPerYear = useCallback((freq: string): number => {
+    switch(freq) {
+      case 'daily': return 365;
+      case 'weekly': return 52;
+      case 'biweekly': return 26;
+      case 'monthly': return 12;
+      case 'quarterly': return 4;
+      case 'semiannual': return 2;
+      case 'annual': return 1;
+      default: return 12;
+    }
+  }, []);
+
   const downloadYearlyDataPDF = useCallback(() => {
     if (!result) return;
     
@@ -246,15 +260,9 @@ const CompoundInterestCalculator: React.FC = () => {
       } else {
         // Apply the annual increase to contributions
         const contributionMultiplier = Math.pow(1 + annualIncrease / 100, data.year - 1);
-        const periodsPerYear = contributionFrequency === 'monthly' ? 12 :
-                              contributionFrequency === 'quarterly' ? 4 :
-                              contributionFrequency === 'semiannual' ? 2 :
-                              contributionFrequency === 'annual' ? 1 :
-                              contributionFrequency === 'weekly' ? 52 :
-                              contributionFrequency === 'biweekly' ? 26 :
-                              contributionFrequency === 'daily' ? 365 : 12;
+        const periodsPerYear = getPeriodsPerYear(contributionFrequency);
         
-        const regularDeposits = (monthlyContribution * (12 / periodsPerYear)) * periodsPerYear * contributionMultiplier;
+        const regularDeposits = monthlyContribution * periodsPerYear * contributionMultiplier;
         yearDeposits = regularDeposits + data.oneTimeDeposits - data.oneTimeWithdrawals;
       }
       
@@ -311,7 +319,7 @@ const CompoundInterestCalculator: React.FC = () => {
     
     // Save the PDF
     doc.save('compound-interest-yearly-data.pdf');
-  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency]);
+  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency, getPeriodsPerYear]);
 
   const downloadFullPagePDF = useCallback(async () => {
     if (!result) return;
@@ -531,15 +539,9 @@ const CompoundInterestCalculator: React.FC = () => {
       } else {
         // Apply the annual increase to contributions
         const contributionMultiplier = Math.pow(1 + annualIncrease / 100, data.year - 1);
-        const periodsPerYear = contributionFrequency === 'monthly' ? 12 :
-                              contributionFrequency === 'quarterly' ? 4 :
-                              contributionFrequency === 'semiannual' ? 2 :
-                              contributionFrequency === 'annual' ? 1 :
-                              contributionFrequency === 'weekly' ? 52 :
-                              contributionFrequency === 'biweekly' ? 26 :
-                              contributionFrequency === 'daily' ? 365 : 12;
+        const periodsPerYear = getPeriodsPerYear(contributionFrequency);
         
-        const regularDeposits = (monthlyContribution * (12 / periodsPerYear)) * periodsPerYear * contributionMultiplier;
+        const regularDeposits = monthlyContribution * periodsPerYear * contributionMultiplier;
         yearDeposits = regularDeposits + data.oneTimeDeposits - data.oneTimeWithdrawals;
       }
       
@@ -596,7 +598,7 @@ const CompoundInterestCalculator: React.FC = () => {
     
     // Save the PDF
     doc.save('compound-interest-full-report.pdf');
-  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, oneTimeTransactions, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency]);
+  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, oneTimeTransactions, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency, getPeriodsPerYear]);
 
   const downloadPDF = useCallback(() => {
     setShowPdfModal(true);
@@ -680,15 +682,9 @@ const CompoundInterestCalculator: React.FC = () => {
       } else {
         // Apply the annual increase to contributions
         const contributionMultiplier = Math.pow(1 + annualIncrease / 100, data.year - 1);
-        const periodsPerYear = contributionFrequency === 'monthly' ? 12 :
-                              contributionFrequency === 'quarterly' ? 4 :
-                              contributionFrequency === 'semiannual' ? 2 :
-                              contributionFrequency === 'annual' ? 1 :
-                              contributionFrequency === 'weekly' ? 52 :
-                              contributionFrequency === 'biweekly' ? 26 :
-                              contributionFrequency === 'daily' ? 365 : 12;
+        const periodsPerYear = getPeriodsPerYear(contributionFrequency);
         
-        const regularDeposits = (monthlyContribution * (12 / periodsPerYear)) * periodsPerYear * contributionMultiplier;
+        const regularDeposits = monthlyContribution * periodsPerYear * contributionMultiplier;
         yearDeposits = regularDeposits + data.oneTimeDeposits - data.oneTimeWithdrawals;
       }
       
@@ -751,7 +747,7 @@ const CompoundInterestCalculator: React.FC = () => {
     
     // Save the Excel file
     XLSX.writeFile(wb, 'compound-interest-report.xlsx');
-  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency]);
+  }, [result, currency, startDate, initialInvestment, monthlyContribution, annualRate, years, compoundFrequency, depositsAtEnd, formatCurrency, annualIncrease, contributionFrequency, customCompoundFrequency, getPeriodsPerYear]);
 
   const updateOneTimeTransaction = useCallback((id: string, updates: Partial<OneTimeTransaction>) => {
     setOneTimeTransactions(prev => 
@@ -790,22 +786,9 @@ const CompoundInterestCalculator: React.FC = () => {
       oneTimeWithdrawals: 0
     });
     
-    // Calculate the number of periods per year based on contribution frequency
-    const getPeriodsPerYear = (freq: string): number => {
-      switch(freq) {
-        case 'daily': return 365;
-        case 'weekly': return 52;
-        case 'biweekly': return 26;
-        case 'monthly': return 12;
-        case 'quarterly': return 4;
-        case 'semiannual': return 2;
-        case 'annual': return 1;
-        default: return 12;
-      }
-    };
     
-    const contributionPeriodsPerYear = getPeriodsPerYear(contributionFrequency);
-    const baseContributionPerPeriod = monthlyContribution * (12 / contributionPeriodsPerYear);
+    // Treat monthlyContribution as the ACTUAL per-period amount (e.g., $100 weekly = $100 every week)
+    const baseContributionPerPeriod = monthlyContribution;
     
     // Track cumulative interest more precisely
     let totalInterestEarned = 0;
@@ -1639,15 +1622,9 @@ const CompoundInterestCalculator: React.FC = () => {
                     } else {
                       // Apply the annual increase to contributions
                       const contributionMultiplier = Math.pow(1 + annualIncrease / 100, data.year - 1);
-                      const periodsPerYear = contributionFrequency === 'monthly' ? 12 :
-                                            contributionFrequency === 'quarterly' ? 4 :
-                                            contributionFrequency === 'semiannual' ? 2 :
-                                            contributionFrequency === 'annual' ? 1 :
-                                            contributionFrequency === 'weekly' ? 52 :
-                                            contributionFrequency === 'biweekly' ? 26 :
-                                            contributionFrequency === 'daily' ? 365 : 12;
+                      const periodsPerYear = getPeriodsPerYear(contributionFrequency);
                       
-                      const regularDeposits = (monthlyContribution * (12 / periodsPerYear)) * periodsPerYear * contributionMultiplier;
+                      const regularDeposits = monthlyContribution * periodsPerYear * contributionMultiplier;
                       yearDeposits = regularDeposits + data.oneTimeDeposits - data.oneTimeWithdrawals;
                     }
                     
