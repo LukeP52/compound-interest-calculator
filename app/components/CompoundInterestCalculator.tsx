@@ -830,27 +830,52 @@ const CompoundInterestCalculator: React.FC = () => {
       // Calculate contribution amount with annual increase
       const contributionMultiplier = Math.pow(1 + annualIncrease / 100, currentYear - 1);
       
-      // Determine if we should add a contribution this month
-      const shouldContribute = (() => {
-        switch(contributionFrequency) {
-          case 'daily': return true; // Simplified: add monthly equivalent
-          case 'weekly': return true; // Simplified: add monthly equivalent
-          case 'biweekly': return true; // Simplified: add monthly equivalent
-          case 'monthly': return true;
-          case 'quarterly': return monthInYear % 3 === 0;
-          case 'semiannual': return monthInYear % 6 === 0;
-          case 'annual': return monthInYear === 12;
-          default: return true;
-        }
-      })();
+      // Calculate the contribution for this month based on frequency
+      let monthlyContributionAmount = 0;
       
-      const monthlyEquivalentContribution = shouldContribute ? 
-        roundToCents(baseContributionPerPeriod * contributionMultiplier * (contributionPeriodsPerYear / monthsPerYear)) : 0;
+      switch(contributionFrequency) {
+        case 'daily':
+          // Daily contributions: contribution amount * days in month (simplified to 30.42 avg)
+          monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier * 30.42);
+          break;
+        case 'weekly':
+          // Weekly contributions: contribution amount * weeks in month (4.33 avg)
+          monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier * 4.33);
+          break;
+        case 'biweekly':
+          // Bi-weekly contributions: contribution amount * bi-weeks in month (2.17 avg)
+          monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier * 2.17);
+          break;
+        case 'monthly':
+          // Monthly contribution
+          monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier);
+          break;
+        case 'quarterly':
+          // Quarterly: only contribute every 3 months
+          if (monthInYear % 3 === 0) {
+            monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier);
+          }
+          break;
+        case 'semiannual':
+          // Semi-annual: only contribute every 6 months
+          if (monthInYear % 6 === 0) {
+            monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier);
+          }
+          break;
+        case 'annual':
+          // Annual: only contribute at the end of the year
+          if (monthInYear === 12) {
+            monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier);
+          }
+          break;
+        default:
+          monthlyContributionAmount = roundToCents(baseContributionPerPeriod * contributionMultiplier);
+      }
       
       // Add contribution at beginning if specified
-      if (!depositsAtEnd && monthlyEquivalentContribution > 0) {
-        currentBalance = roundToCents(currentBalance + monthlyEquivalentContribution);
-        yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyEquivalentContribution);
+      if (!depositsAtEnd && monthlyContributionAmount > 0) {
+        currentBalance = roundToCents(currentBalance + monthlyContributionAmount);
+        yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyContributionAmount);
       }
       
       // Apply compound interest if it's a compounding period
@@ -879,9 +904,9 @@ const CompoundInterestCalculator: React.FC = () => {
       }
       
       // Add contribution at end if specified
-      if (depositsAtEnd && monthlyEquivalentContribution > 0) {
-        currentBalance = roundToCents(currentBalance + monthlyEquivalentContribution);
-        yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyEquivalentContribution);
+      if (depositsAtEnd && monthlyContributionAmount > 0) {
+        currentBalance = roundToCents(currentBalance + monthlyContributionAmount);
+        yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyContributionAmount);
       }
       
       // Handle one-time transactions
