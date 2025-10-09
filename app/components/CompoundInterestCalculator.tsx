@@ -810,82 +810,130 @@ const CompoundInterestCalculator: React.FC = () => {
     // Track cumulative interest more precisely
     let totalInterestEarned = 0;
     
-    // Calculate for each year
+    // Calculate total periods (use monthly periods as base for precision)
+    const monthsPerYear = 12;
+    const totalMonths = t * monthsPerYear;
+    
+    // Track year data for chart
+    const yearData: { [key: number]: { contributions: number, oneTimeDeposits: number, oneTimeWithdrawals: number, startBalance: number } } = {};
+    
+    // Initialize year tracking
     for (let year = 1; year <= t; year++) {
-      const yearStartBalance = currentBalance;
-      let yearContributions = 0;
-      let yearOneTimeDeposits = 0;
-      let yearOneTimeWithdrawals = 0;
+      yearData[year] = { contributions: 0, oneTimeDeposits: 0, oneTimeWithdrawals: 0, startBalance: currentBalance };
+    }
+    
+    // Process each month
+    for (let month = 1; month <= totalMonths; month++) {
+      const currentYear = Math.ceil(month / monthsPerYear);
+      const monthInYear = ((month - 1) % monthsPerYear) + 1;
       
-      // Calculate this year's contribution amount with annual increase
-      const contributionMultiplier = Math.pow(1 + annualIncrease / 100, year - 1);
-      const adjustedContributionPerPeriod = roundToCents(baseContributionPerPeriod * contributionMultiplier);
+      // Calculate contribution amount with annual increase
+      const contributionMultiplier = Math.pow(1 + annualIncrease / 100, currentYear - 1);
       
-      // For custom compound frequency with contribution periods
-      const periodsInYear = contributionPeriodsPerYear;
-      const compoundingsPerContributionPeriod = n / contributionPeriodsPerYear;
-      
-      // For each contribution period in the year
-      for (let period = 1; period <= periodsInYear; period++) {
-        // If deposits at beginning of period, add contribution first
-        if (!depositsAtEnd && adjustedContributionPerPeriod > 0) {
-          currentBalance = roundToCents(currentBalance + adjustedContributionPerPeriod);
-          yearContributions = roundToCents(yearContributions + adjustedContributionPerPeriod);
+      // Determine if we should add a contribution this month
+      const shouldContribute = (() => {
+        switch(contributionFrequency) {
+          case 'daily': return true; // Simplified: add monthly equivalent
+          case 'weekly': return true; // Simplified: add monthly equivalent
+          case 'biweekly': return true; // Simplified: add monthly equivalent
+          case 'monthly': return true;
+          case 'quarterly': return monthInYear % 3 === 0;
+          case 'semiannual': return monthInYear % 6 === 0;
+          case 'annual': return monthInYear === 12;
+          default: return true;
         }
-        
-        // Apply compound interest for this period
-        const periodRate = r / n;
-        currentBalance = roundToCents(currentBalance * Math.pow(1 + periodRate, compoundingsPerContributionPeriod));
-        
-        // If deposits at end of period, add contribution after interest
-        if (depositsAtEnd && adjustedContributionPerPeriod > 0) {
-          currentBalance = roundToCents(currentBalance + adjustedContributionPerPeriod);
-          yearContributions = roundToCents(yearContributions + adjustedContributionPerPeriod);
-        }
-        
-        // Handle one-time transactions for this period
-        const startYear = new Date(startDate).getFullYear();
-        const currentCalendarYear = startYear + year - 1;
-        const periodStartMonth = Math.floor((period - 1) * 12 / periodsInYear);
-        const periodEndMonth = Math.floor(period * 12 / periodsInYear);
-        
-        const periodTransactions = oneTimeTransactions.filter(transaction => {
-          const transDate = new Date(transaction.date);
-          const transYear = transDate.getFullYear();
-          const transMonth = transDate.getMonth();
-          
-          return transYear === currentCalendarYear && 
-                 transMonth >= periodStartMonth && 
-                 transMonth < periodEndMonth;
-        });
-        
-        periodTransactions.forEach(transaction => {
-          if (transaction.type === 'deposit') {
-            currentBalance = roundToCents(currentBalance + transaction.amount);
-            yearOneTimeDeposits = roundToCents(yearOneTimeDeposits + transaction.amount);
-          } else {
-            currentBalance = roundToCents(currentBalance - transaction.amount);
-            yearOneTimeWithdrawals = roundToCents(yearOneTimeWithdrawals + transaction.amount);
-          }
-        });
+      })();
+      
+      const monthlyEquivalentContribution = shouldContribute ? 
+        roundToCents(baseContributionPerPeriod * contributionMultiplier * (contributionPeriodsPerYear / monthsPerYear)) : 0;
+      
+      // Add contribution at beginning if specified
+      if (!depositsAtEnd && monthlyEquivalentContribution > 0) {
+        currentBalance = roundToCents(currentBalance + monthlyEquivalentContribution);
+        yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyEquivalentContribution);
       }
       
-      // Update total contributions
-      totalContributionsToDate = roundToCents(totalContributionsToDate + yearContributions + yearOneTimeDeposits - yearOneTimeWithdrawals);
+      // Apply compound interest if it's a compounding period
+      const shouldCompound = (() => {
+        // Determine if this month is a compounding period
+        if (n >= 12) {
+          // Monthly or more frequent compounding
+          const compoundingsPerMonth = n / monthsPerYear;
+          const monthlyRate = r / n;
+          // Apply multiple compoundings within the month
+          for (let i = 0; i < compoundingsPerMonth; i++) {
+            currentBalance = roundToCents(currentBalance * (1 + monthlyRate));
+          }
+          return true;
+        } else {
+          // Less frequent than monthly
+          const monthsPerCompound = monthsPerYear / n;
+          return month % monthsPerCompound === 0;
+        }
+      })();
       
-      // Calculate interest earned this year (more precise)
-      const yearInterest = roundToCents(currentBalance - yearStartBalance - yearContributions - yearOneTimeDeposits + yearOneTimeWithdrawals);
-      totalInterestEarned = roundToCents(totalInterestEarned + yearInterest);
+      if (shouldCompound && n < 12) {
+        // For less frequent compounding (quarterly, semi-annual, annual)
+        const periodRate = r / n;
+        currentBalance = roundToCents(currentBalance * (1 + periodRate));
+      }
       
-      // Store data for this year
-      chartData.push({
-        year,
-        principal: totalContributionsToDate,
-        interest: totalInterestEarned,
-        total: currentBalance,
-        oneTimeDeposits: yearOneTimeDeposits,
-        oneTimeWithdrawals: yearOneTimeWithdrawals
+      // Add contribution at end if specified
+      if (depositsAtEnd && monthlyEquivalentContribution > 0) {
+        currentBalance = roundToCents(currentBalance + monthlyEquivalentContribution);
+        yearData[currentYear].contributions = roundToCents(yearData[currentYear].contributions + monthlyEquivalentContribution);
+      }
+      
+      // Handle one-time transactions
+      const startYear = new Date(startDate).getFullYear();
+      const currentCalendarYear = startYear + currentYear - 1;
+      const currentCalendarMonth = monthInYear - 1; // 0-indexed for Date comparison
+      
+      const monthTransactions = oneTimeTransactions.filter(transaction => {
+        const transDate = new Date(transaction.date);
+        const transYear = transDate.getFullYear();
+        const transMonth = transDate.getMonth();
+        
+        return transYear === currentCalendarYear && transMonth === currentCalendarMonth;
       });
+      
+      monthTransactions.forEach(transaction => {
+        if (transaction.type === 'deposit') {
+          currentBalance = roundToCents(currentBalance + transaction.amount);
+          yearData[currentYear].oneTimeDeposits = roundToCents(yearData[currentYear].oneTimeDeposits + transaction.amount);
+        } else {
+          currentBalance = roundToCents(currentBalance - transaction.amount);
+          yearData[currentYear].oneTimeWithdrawals = roundToCents(yearData[currentYear].oneTimeWithdrawals + transaction.amount);
+        }
+      });
+      
+      // At the end of each year, record data
+      if (month % monthsPerYear === 0) {
+        const year = month / monthsPerYear;
+        const yearContributions = yearData[year].contributions;
+        const yearOneTimeDeposits = yearData[year].oneTimeDeposits;
+        const yearOneTimeWithdrawals = yearData[year].oneTimeWithdrawals;
+        const yearStartBalance = yearData[year].startBalance;
+        
+        totalContributionsToDate = roundToCents(totalContributionsToDate + yearContributions + yearOneTimeDeposits - yearOneTimeWithdrawals);
+        
+        const yearInterest = roundToCents(currentBalance - yearStartBalance - yearContributions - yearOneTimeDeposits + yearOneTimeWithdrawals);
+        totalInterestEarned = roundToCents(totalInterestEarned + yearInterest);
+        
+        chartData.push({
+          year,
+          principal: totalContributionsToDate,
+          interest: totalInterestEarned,
+          total: currentBalance,
+          oneTimeDeposits: yearOneTimeDeposits,
+          oneTimeWithdrawals: yearOneTimeWithdrawals
+        });
+        
+        // Update start balance for next year
+        if (year < t) {
+          yearData[year + 1].startBalance = currentBalance;
+        }
+      }
     }
     
     return {
