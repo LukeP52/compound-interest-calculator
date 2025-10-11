@@ -1,4 +1,5 @@
 import CompoundInterestCalculator from './components/CompoundInterestCalculator';
+import AdSenseAd from './components/AdSenseAd';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,12 +10,12 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div>
+    <main role="main">
       {/* Calculator Component */}
       <CompoundInterestCalculator />
 
       {/* Educational Content Section */}
-      <div className="max-w-4xl mx-auto px-4 py-8 md:px-6">
+      <article className="max-w-4xl mx-auto px-4 py-8 md:px-6">
         <div className="prose prose-lg max-w-none">
           <h2 className="text-2xl md:text-3xl font-bold text-charcoal-800 mb-6 text-center">
             Understanding Compound Interest
@@ -56,6 +57,16 @@ export default function Home() {
               <li>Choose investments with consistent returns</li>
               <li>Don&apos;t withdraw money unnecessarily</li>
             </ul>
+          </div>
+
+          {/* Ad Unit - After substantial content */}
+          <div className="my-8 flex justify-center">
+            <AdSenseAd 
+              slot="1234567890" 
+              style={{ display: 'block', width: '728px', height: '90px' }}
+              format="horizontal"
+              className="max-w-full"
+            />
           </div>
 
           <h2 className="text-2xl md:text-3xl font-bold text-charcoal-800 mb-6">
@@ -110,8 +121,18 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Ad Unit - Before FAQ section */}
+          <div className="my-8 flex justify-center">
+            <AdSenseAd 
+              slot="0987654321" 
+              style={{ display: 'block', width: '300px', height: '250px' }}
+              format="rectangle"
+              className="max-w-full"
+            />
+          </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </main>
   );
 }
