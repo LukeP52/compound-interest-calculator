@@ -33,8 +33,10 @@ const AdSenseAd: React.FC<AdSenseAdProps> = ({
 
     try {
       // Check if adsbygoogle is available
-      if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      if (typeof window !== 'undefined' && (window as unknown as { adsbygoogle?: unknown[] }).adsbygoogle) {
+        const adsbygoogle = (window as unknown as { adsbygoogle: unknown[] }).adsbygoogle || [];
+        (window as unknown as { adsbygoogle: unknown[] }).adsbygoogle = adsbygoogle;
+        adsbygoogle.push({});
       }
     } catch (error) {
       console.log('AdSense error:', error);
