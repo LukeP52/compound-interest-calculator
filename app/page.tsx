@@ -14,8 +14,11 @@ export default function Home() {
       {/* Calculator Component */}
       <CompoundInterestCalculator />
 
-      {/* Educational Content Section */}
-      <article className="max-w-4xl mx-auto px-4 py-8 md:px-6">
+      {/* Educational Content Section with Responsive Layout */}
+      <div className="max-w-7xl mx-auto px-4 py-8 md:px-6">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main Content */}
+          <article className="flex-1 max-w-4xl">
         <div className="prose prose-lg max-w-none">
           <h2 className="text-2xl md:text-3xl font-bold text-charcoal-800 mb-6 text-center">
             Understanding Compound Interest
@@ -59,8 +62,8 @@ export default function Home() {
             </ul>
           </div>
 
-          {/* Ad Unit - After substantial content */}
-          <div className="my-8 flex justify-center">
+          {/* Ad Unit - After substantial content (Mobile/Tablet only) */}
+          <div className="my-8 flex justify-center lg:hidden">
             <AdSenseAd 
               slot="1234567890" 
               style={{ display: 'block', width: '728px', height: '90px' }}
@@ -122,8 +125,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Ad Unit - Before FAQ section */}
-          <div className="my-8 flex justify-center">
+          {/* Ad Unit - Before FAQ section (Mobile/Tablet only) */}
+          <div className="my-8 flex justify-center lg:hidden">
             <AdSenseAd 
               slot="0987654321" 
               style={{ display: 'block', width: '300px', height: '250px' }}
@@ -133,6 +136,33 @@ export default function Home() {
           </div>
         </div>
       </article>
+
+      {/* Desktop Sidebar Ads */}
+      <aside className="hidden lg:block w-80 flex-shrink-0">
+        <div className="sticky top-8 space-y-6">
+          {/* Sidebar Ad 1 - Skyscraper */}
+          <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+            <AdSenseAd 
+              slot="1111111111" 
+              style={{ display: 'block', width: '300px', height: '600px' }}
+              format="vertical"
+              className="max-w-full"
+            />
+          </div>
+          
+          {/* Sidebar Ad 2 - Medium Rectangle */}
+          <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+            <AdSenseAd 
+              slot="2222222222" 
+              style={{ display: 'block', width: '300px', height: '250px' }}
+              format="rectangle"
+              className="max-w-full"
+            />
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
     </main>
   );
 }
