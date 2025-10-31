@@ -91,14 +91,15 @@ export default async function BlogPost({ params }: Props) {
         <div 
           className="prose prose-lg prose-gray dark:prose-invert max-w-none
             prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
-            prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mt-12 prose-h2:mb-6
-            prose-h3:text-2xl md:prose-h3:text-3xl prose-h3:mt-8 prose-h3:mb-4
+            prose-h2:text-4xl md:prose-h2:text-5xl prose-h2:mt-12 prose-h2:mb-8
+            prose-h3:text-3xl md:prose-h3:text-4xl prose-h3:mt-8 prose-h3:mb-6
             prose-p:mb-6 prose-p:leading-relaxed
             prose-ul:my-6 prose-ul:space-y-3
             prose-li:ml-4
             prose-strong:text-gray-900 dark:prose-strong:text-white
             prose-a:text-primary prose-a:no-underline hover:prose-a:underline
             [&>h2]:before:content-[''] [&>h2]:before:block [&>h2]:before:mb-8
+            [&>h2]:after:content-[''] [&>h2]:after:block [&>h2]:after:mb-8
             [&>p+p]:mt-6"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />

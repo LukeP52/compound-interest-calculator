@@ -480,11 +480,11 @@ body {
 
 /* Blog Post Styling */
 .blog-content h2 {
-  @apply text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-12 mb-6;
+  @apply text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-12 mb-8;
 }
 
 .blog-content h3 {
-  @apply text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-100 mt-8 mb-4;
+  @apply text-3xl md:text-4xl font-semibold text-gray-800 dark:text-gray-100 mt-8 mb-6;
 }
 
 .blog-content p {
@@ -512,7 +512,11 @@ body {
   @apply border-l-4 border-primary pl-4 my-6 italic text-gray-600 dark:text-gray-400;
 }
 
-/* Add spacing before section headings */
+/* Add spacing before and after section headings */
 .blog-content h2:not(:first-child) {
   @apply mt-16;
+}
+
+.blog-content h2 + * {
+  @apply mt-8;
 }
