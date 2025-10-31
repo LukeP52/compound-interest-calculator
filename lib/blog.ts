@@ -42,7 +42,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       tags: data.tags || [],
       readTime: Math.ceil(stats.minutes),
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -60,7 +60,7 @@ export async function getAllPosts(): Promise<Post[]> {
     return posts
       .filter((post): post is Post => post !== null)
       .sort((a, b) => (new Date(b.date).getTime() - new Date(a.date).getTime()));
-  } catch (error) {
+  } catch {
     return [];
   }
 }
