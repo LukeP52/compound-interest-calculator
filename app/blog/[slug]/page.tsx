@@ -89,7 +89,15 @@ export default async function BlogPost({ params }: Props) {
         </header>
 
         <div 
-          className="prose prose-lg prose-gray dark:prose-invert max-w-none"
+          className="prose prose-lg prose-gray dark:prose-invert max-w-none
+            prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
+            prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
+            prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
+            prose-p:mb-4 prose-p:leading-relaxed
+            prose-ul:my-4 prose-ul:space-y-2
+            prose-li:ml-4
+            prose-strong:text-gray-900 dark:prose-strong:text-white
+            prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
