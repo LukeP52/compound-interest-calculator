@@ -480,7 +480,7 @@ body {
 
 /* Blog Post Styling - Force override with !important */
 .blog-content h2 {
-  font-size: 2.25rem !important; /* 36px */
+  font-size: 1.75rem !important; /* 28px */
   font-weight: 700 !important;
   color: #111827 !important;
   margin-top: 3rem !important;
@@ -490,12 +490,12 @@ body {
 
 @media (min-width: 768px) {
   .blog-content h2 {
-    font-size: 3rem !important; /* 48px */
+    font-size: 2rem !important; /* 32px */
   }
 }
 
 .blog-content h3 {
-  font-size: 1.875rem !important; /* 30px */
+  font-size: 1.5rem !important; /* 24px */
   font-weight: 600 !important;
   color: #1f2937 !important;
   margin-top: 2rem !important;
@@ -505,7 +505,7 @@ body {
 
 @media (min-width: 768px) {
   .blog-content h3 {
-    font-size: 2.25rem !important; /* 36px */
+    font-size: 1.75rem !important; /* 28px */
   }
 }
 
