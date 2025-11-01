@@ -47,8 +47,17 @@ export default async function BlogPost({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen p-4 md:p-8 lg:p-24">
-      <article className="max-w-4xl mx-auto">
+    <main className="min-h-screen relative">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-0 right-20 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-6000"></div>
+      </div>
+      
+      <div className="relative z-10 p-4 md:p-8 lg:p-24">
+        <article className="max-w-4xl mx-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-primary hover:underline mb-8"
@@ -123,7 +132,8 @@ export default async function BlogPost({ params }: Props) {
             </div>
           </div>
         </footer>
-      </article>
+        </article>
+      </div>
     </main>
   );
 }
