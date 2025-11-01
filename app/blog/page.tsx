@@ -11,12 +11,12 @@ export default async function BlogPage() {
   const posts = await getAllPosts();
 
   return (
-    <main className="min-h-screen relative">
-      {/* Decorative background gradient */}
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      {/* Professional grid pattern */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"></div>
-        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-green-200 to-blue-200 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236B7280' fill-opacity='0.03'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+        }}></div>
       </div>
       
       <div className="relative z-10 p-4 md:p-8 lg:p-24">
@@ -29,10 +29,9 @@ export default async function BlogPage() {
           Stay informed with our weekly analysis of market trends, investment opportunities, and financial insights.
         </p>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <article key={post.slug} className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-emerald-400 to-primary-dark"></div>
+            <article key={post.slug} className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200">
               <Link href={`/blog/${post.slug}`} className="block h-full p-6">
                 <time className="text-sm text-gray-500 dark:text-gray-400">
                   {new Date(post.date).toLocaleDateString("en-US", {

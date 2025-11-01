@@ -47,17 +47,16 @@ export default async function BlogPost({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen relative">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        <div className="absolute bottom-0 right-20 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-6000"></div>
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      {/* Professional geometric pattern */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236B7280' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}></div>
       </div>
       
       <div className="relative z-10 p-4 md:p-8 lg:p-24">
-        <article className="max-w-4xl mx-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12">
+        <article className="max-w-4xl mx-auto bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 p-8 md:p-12">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-primary hover:underline mb-8"
@@ -66,7 +65,7 @@ export default async function BlogPost({ params }: Props) {
           Back to all posts
         </Link>
 
-        <header className="mb-12 pb-8 border-b-2 border-gradient-to-r from-primary/20 via-primary/10 to-transparent">
+        <header className="mb-12 pb-8 border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-6 leading-tight">
             {post.title}
           </h1>
