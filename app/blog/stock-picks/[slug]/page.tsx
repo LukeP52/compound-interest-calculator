@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { getAllPosts, getPostBySlug, getCategoryBySlug } from "@/lib/blog";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -8,8 +8,10 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+const CATEGORY = "stock-picks";
+
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
+  const posts = await getAllPosts(CATEGORY);
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -17,7 +19,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  const post = await getPostBySlug(resolvedParams.slug);
+  const post = await getPostBySlug(resolvedParams.slug, CATEGORY);
   
   if (!post) {
     return {
@@ -26,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post.title} | Weekly Market Blog`,
+    title: `${post.title} | Stock Picks`,
     description: post.excerpt,
     openGraph: {
       title: post.title,
@@ -40,16 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPost({ params }: Props) {
   const resolvedParams = await params;
-  const post = await getPostBySlug(resolvedParams.slug);
+  const post = await getPostBySlug(resolvedParams.slug, CATEGORY);
+  const category = getCategoryBySlug(CATEGORY);
 
   if (!post) {
     notFound();
-  }
-
-  // Redirect to the appropriate category URL
-  if (post.category && post.category !== "blog") {
-    const { redirect } = await import("next/navigation");
-    redirect(`/blog/${post.category}/${post.slug}`);
   }
 
   return (
@@ -63,13 +60,22 @@ export default async function BlogPost({ params }: Props) {
       
       <div className="relative z-10 p-4 md:p-8 lg:p-24">
         <article className="max-w-4xl mx-auto bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 p-8 md:p-12">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 text-primary hover:underline mb-8"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to blog
-        </Link>
+        <div className="flex items-center gap-4 mb-8">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-primary hover:underline"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to blog
+          </Link>
+          <span className="text-gray-300 dark:text-gray-600">|</span>
+          <Link
+            href={`/blog/${CATEGORY}`}
+            className="text-primary hover:underline"
+          >
+            {category?.name || "Stock Picks"}
+          </Link>
+        </div>
 
         <header className="mb-12 pb-8 border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-6 leading-tight">
@@ -132,7 +138,7 @@ export default async function BlogPost({ params }: Props) {
                 {post.author}
               </p>
               <p className="text-gray-500 dark:text-gray-400">
-                Market Analyst
+                Stock Analyst
               </p>
             </div>
           </div>

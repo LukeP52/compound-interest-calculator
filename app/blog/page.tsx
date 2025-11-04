@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, blogCategories } from "@/lib/blog";
+import { Calendar, FileText, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Weekly Market Blog | Compound Interest Calculator",
-  description: "Weekly market updates, analysis, and insights to help you make informed investment decisions.",
+  title: "Market Blog | Compound Interest Calculator",
+  description: "Market analysis, daily recaps, stock picks, and weekly roundups to help you make informed investment decisions.",
+};
+
+const categoryIcons = {
+  "weekly-roundup": TrendingUp,
+  "daily-recap": Calendar,
+  "stock-picks": FileText,
 };
 
 export default async function BlogPage() {
-  const posts = await getAllPosts();
+  const recentPosts = await getAllPosts();
+  const latestPosts = recentPosts.slice(0, 6); // Show 6 most recent posts
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
@@ -21,56 +29,102 @@ export default async function BlogPage() {
       
       <div className="relative z-10 p-4 md:p-8 lg:p-24">
         <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-8">
-          Weekly Market Updates
-        </h1>
-        
-        <p className="text-lg text-gray-600 dark:text-gray-300 mb-12">
-          Stay informed with our weekly analysis of market trends, investment opportunities, and financial insights.
-        </p>
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-8">
+            Market Analysis & Insights
+          </h1>
+          
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12">
+            Stay informed with our comprehensive market coverage including daily recaps, stock recommendations, and weekly analysis.
+          </p>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <article key={post.slug} className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200">
-              <Link href={`/blog/${post.slug}`} className="block h-full p-6">
-                <time className="text-sm text-gray-500 dark:text-gray-400">
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
-                
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mt-2 mb-3 group-hover:text-primary transition-colors">
-                  {post.title}
-                </h2>
-                
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {post.excerpt}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
-
-        {posts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400">
-              No blog posts yet. Check back soon for our first weekly market update!
-            </p>
+          {/* Blog Categories */}
+          <div className="grid gap-6 md:grid-cols-3 mb-12">
+            {blogCategories.map((category) => {
+              const Icon = categoryIcons[category.slug as keyof typeof categoryIcons] || FileText;
+              return (
+                <Link
+                  key={category.slug}
+                  href={`/blog/${category.slug}`}
+                  className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition-all duration-200 p-6"
+                >
+                  <div className="flex items-start space-x-4">
+                    <Icon className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                        {category.name}
+                      </h2>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">
+                        {category.description}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-        )}
+
+          {/* Recent Posts */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+              Recent Posts
+            </h2>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {latestPosts.map((post) => (
+                <article key={post.slug} className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200">
+                  <Link href={`/blog/${post.category}/${post.slug}`} className="block h-full p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <time className="text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(post.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </time>
+                      <span className="text-xs font-medium text-primary uppercase">
+                        {blogCategories.find(cat => cat.slug === post.category)?.name || post.category}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white mt-2 mb-3 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+                      {post.excerpt}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                      {post.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            {recentPosts.length > 6 && (
+              <div className="mt-8 text-center">
+                <p className="text-gray-500 dark:text-gray-400">
+                  Browse posts by category above to see all articles
+                </p>
+              </div>
+            )}
+          </div>
+
+          {recentPosts.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400">
+                No blog posts yet. Check back soon for market updates!
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </main>
